@@ -1,0 +1,12 @@
+# Configurations for sending anniversary message by email.
+# Copy or rename this file to anniversary.cfg and edit the values.
+[smtp]
+host = 
+port = 
+username = 
+password = 
+
+[email]
+fromaddr = 
+# toaddrs may contain multiple email addresses separated by whitespace
+toaddrs = 
