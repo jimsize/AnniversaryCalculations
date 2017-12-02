@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 
 
+"""Calculate the number of days, weeks, and months since Annelies and Jim
+were married.
+
+This module can print the results to stdout
+or send the message by email or SNS.
+"""
+
+
+# TODO: make the SNS Topic ARN configurable
+# TODO: Consider refactoring into a class.
+
+
 import configparser
 import datetime
 import os.path
@@ -65,7 +77,21 @@ def send_email(fromaddr, toaddrs, smtp, message):
 
 def aws_lambda_handler(event, context):
     """Calculate and send anniversary messages with AWS Lambda ."""
-    return {'message': anniversary_message()}
+    message = anniversary_message()
+    sns_response = send_sns('arn:aws:sns:us-east-2:293520259859:AnniversaryTopic', message)
+    return {'message': message,
+            'sns_response': sns_response}
+
+
+def send_sns(topic_arn, message):
+    """Send anniversary message via AWS SNS."""
+    import boto3
+    sns = boto3.resource('sns')
+    topic = sns.Topic(topic_arn)
+    response = topic.publish(
+            Subject='Anniversary Calculations',
+            Message=message)
+    return response
 
 
 if __name__=='__main__':
