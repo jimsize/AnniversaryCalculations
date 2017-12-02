@@ -7,35 +7,44 @@ import os.path
 import smtplib
 
 
-today=datetime.date.today()
-wedding=datetime.date(2004, 5, 1)
+def message():
+    """Create the "anniversary" text message.
 
-# Calculate Days
-days = (today-wedding).days
+    This calculates the number of days, weeks, and months since Annelies
+    and Jim were married.
 
-# Calculate Weeks
-saturday = today + datetime.timedelta( (5-today.weekday()) % 7 )
-weeks = ((saturday-wedding).days // 7)
+    Other functions in this module deliver this message.
+    """
+    today=datetime.date.today()
+    wedding=datetime.date(2004, 5, 1)
 
-# Calculate Months
-if today.day == 1: 
-    first_of_month = today
-else:
-    next_month = today.month + 1
-    next_months_year = today.year
-    if next_month==13: 
-        next_month = 1
-        next_months_year += 1
-    first_of_month = today.replace(year=next_months_year, month=next_month, day=1)
-months = (first_of_month.year - wedding.year) * 12 + (first_of_month.month - 5)
+    # Calculate Days
+    days = (today-wedding).days
 
-# Output
-format = "%A, %B %d, %Y"
-message = "Annelies and Jim were married on %s.\r\n" % wedding.strftime(format)
-message = message + "Today is %s.\r\n" % today.strftime(format)
-message = message + "We have been married for %s days.\r\n" % days
-message = message + "On %s, it will have been %s weeks since the wedding.\r\n" % (saturday.strftime(format), weeks)
-message = message + "On %s, it will have been %s months since the wedding.\r\n" % (first_of_month.strftime(format), months)
+    # Calculate Weeks
+    saturday = today + datetime.timedelta( (5-today.weekday()) % 7 )
+    weeks = ((saturday-wedding).days // 7)
+
+    # Calculate Months
+    if today.day == 1: 
+        first_of_month = today
+    else:
+        next_month = today.month + 1
+        next_months_year = today.year
+        if next_month==13: 
+            next_month = 1
+            next_months_year += 1
+        first_of_month = today.replace(year=next_months_year, month=next_month, day=1)
+    months = (first_of_month.year - wedding.year) * 12 + (first_of_month.month - 5)
+
+    # Output
+    format = "%A, %B %d, %Y"
+    message = "Annelies and Jim were married on %s.\r\n" % wedding.strftime(format)
+    message = message + "Today is %s.\r\n" % today.strftime(format)
+    message = message + "We have been married for %s days.\r\n" % days
+    message = message + "On %s, it will have been %s weeks since the wedding.\r\n" % (saturday.strftime(format), weeks)
+    message = message + "On %s, it will have been %s months since the wedding.\r\n" % (first_of_month.strftime(format), months)
+    return message
 
 
 def send_email(fromaddr, toaddrs, smtp, message):
@@ -72,6 +81,7 @@ if __name__=='__main__':
 
     options, args = parser.parse_args()
 
+    message = message()
     if options.stdout:
         print(message)
 
