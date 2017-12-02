@@ -7,7 +7,7 @@ import os.path
 import smtplib
 
 
-def message():
+def anniversary_message():
     """Create the "anniversary" text message.
 
     This calculates the number of days, weeks, and months since Annelies
@@ -48,6 +48,7 @@ def message():
 
 
 def send_email(fromaddr, toaddrs, smtp, message):
+    """Send the anniversary message by email."""
     # add headers to the start of the message
     headers = "Date: %s\r\n" % datetime.datetime.now().strftime("%a, %b %d, %Y at %I:%M %p")
     headers = headers + "From: %s\r\n" % fromaddr
@@ -60,6 +61,11 @@ def send_email(fromaddr, toaddrs, smtp, message):
     server.login(smtp['username'], smtp['password'])
     server.sendmail(fromaddr, toaddrs, headers + message)
     server.quit()
+
+
+def aws_lambda_handler(event, context):
+    """Calculate and send anniversary messages with AWS Lambda ."""
+    return {'message': anniversary_message()}
 
 
 if __name__=='__main__':
@@ -81,7 +87,7 @@ if __name__=='__main__':
 
     options, args = parser.parse_args()
 
-    message = message()
+    message = anniversary_message()
     if options.stdout:
         print(message)
 
