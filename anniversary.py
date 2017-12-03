@@ -33,14 +33,14 @@ class Anniversary:
         event = self.config['event']
         today=datetime.date.today()
         original_date_str = event['original_date']
-        wedding=datetime.datetime.strptime(original_date_str, '%Y-%m-%d').date()
+        original_date=datetime.datetime.strptime(original_date_str, '%Y-%m-%d').date()
 
         # Calculate Days
-        days = (today-wedding).days
+        days = (today-original_date).days
 
         # Calculate Weeks
         saturday = today + datetime.timedelta( (5-today.weekday()) % 7 )
-        weeks = ((saturday-wedding).days // 7)
+        weeks = ((saturday-original_date).days // 7)
 
         # Calculate Months
         if today.day == 1:
@@ -52,18 +52,19 @@ class Anniversary:
                 next_month = 1
                 next_months_year += 1
             first_of_month = today.replace(year=next_months_year, month=next_month, day=1)
-        months = (first_of_month.year - wedding.year) * 12 + (first_of_month.month - 5)
+        months = (first_of_month.year - original_date.year) * 12 + (first_of_month.month - 5)
 
         # Output
         template = "{names} {did_this} on {original_date}.\r\n" \
         "Today is {today}.\r\n" \
-        "It has been {days} days since the wedding.\r\n" \
-        "On {week_date}, it will have been {weeks} weeks since the wedding.\r\n" \
-        "On {month_date}, it will have been {months} months since the wedding."
+        "It has been {days} days since the {original_event}.\r\n" \
+        "On {week_date}, it will have been {weeks} weeks since the {original_event}.\r\n" \
+        "On {month_date}, it will have been {months} months since the {original_event}."
         date_format = "%A, %B %d, %Y"
         format_args = {'names': event['names'],
                 'did_this': event['did_this'],
-                'original_date': wedding.strftime(date_format),
+                'original_date': original_date.strftime(date_format),
+                'original_event': event['original_event'],
                 'today': today.strftime(date_format),
                 'days': days,
                 'week_date': saturday.strftime(date_format),
