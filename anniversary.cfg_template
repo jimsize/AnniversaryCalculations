@@ -1,5 +1,17 @@
-# Configurations for sending anniversary message by email.
 # Copy or rename this file to anniversary.cfg and edit the values.
+
+# The original event to celebrate.
+# These values are substituted into the message text.
+# The original_date is used for the basis of the calculating the days, weeks,
+# and months since the original event.
+[event]
+names = 
+did_this = 
+original_event = 
+# original_date format is YYYY-MM-DD
+original_date = 
+
+# For sending email with SMTP
 [smtp]
 host = 
 port = 
@@ -10,3 +22,7 @@ password =
 fromaddr = 
 # toaddrs may contain multiple email addresses separated by whitespace
 toaddrs = 
+
+# For sending messages with Amazon Web Services SNS
+[sns]
+topic_arn = 
